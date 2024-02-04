@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+  web:
+    container_name: django
+    build: ./dockerfiles/django_docker/
+    command: python3 app/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/workspace
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: always
